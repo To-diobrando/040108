@@ -11,20 +11,44 @@
     height: 100vh;
     background: linear-gradient(#ffe6f0, #fff);
     font-family: Georgia, serif;
+    overflow: hidden;
+  }
+
+  /* Floating hearts */
+  .heart {
+    position: fixed;
+    bottom: -20px;
+    font-size: 20px;
+    color: #ff6fa5;
+    opacity: 0.7;
+    animation: floatUp linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes floatUp {
+    from { transform: translateY(0); opacity: 0.8; }
+    to { transform: translateY(-110vh); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
   }
 
   .card {
     background: white;
     width: 90%;
     max-width: 420px;
-    padding: 30px;
+    height: 70vh;
+    padding: 25px;
     border-radius: 22px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     text-align: center;
+    overflow: hidden;
     transition: opacity 2s ease;
   }
 
@@ -33,11 +57,19 @@
     margin-bottom: 10px;
   }
 
-  p {
+  #letter {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    text-align: left;
+    padding-right: 5px;
+  }
+
+  #typedText {
     font-size: 17px;
     line-height: 1.7;
-    color: #333;
     white-space: pre-wrap;
+    color: #333;
   }
 
   button {
@@ -50,26 +82,6 @@
     cursor: pointer;
   }
 
-  #letter {
-    display: none;
-    text-align: left;
-  }
-
-  #finalText {
-    display: none;
-    position: absolute;
-    font-size: 28px;
-    color: #ff4d88;
-    font-weight: bold;
-    text-align: center;
-    animation: fadeIn 3s ease forwards;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
   .fadeOut {
     animation: fadeOut 3s ease forwards;
   }
@@ -78,6 +90,25 @@
     from { opacity: 1; }
     to { opacity: 0; }
   }
+
+  #finalText {
+    display: none;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    color: #ff4d88;
+    font-weight: bold;
+    animation: fadeIn 3s ease forwards;
+    z-index: 3;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 </style>
 </head>
 
@@ -85,26 +116,27 @@
 
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
-<div class="card" id="card">
+<div class="container">
+  <div class="card" id="card">
 
-  <!-- START -->
-  <div id="start">
-    <h1>To my love 💗</h1>
-    <p>I made this just for you.</p>
-    <button id="openBtn">Click to open 🤍</button>
+    <div id="start">
+      <h1>To my love 💗</h1>
+      <p>I made this just for you.</p>
+      <button id="openBtn">Click to open 🤍</button>
+    </div>
+
+    <div id="letter">
+      <h1>To my love,</h1>
+      <div id="typedText"></div>
+    </div>
+
   </div>
-
-  <!-- LETTER -->
-  <div id="letter">
-    <h1>To my love,</h1>
-    <p id="typedText"></p>
-  </div>
-
 </div>
 
 <div id="finalText">I love you Armaan, forever.</div>
 
 <script>
+/* LETTER TEXT */
 const letter = `
 Dear Armaan,
 Happy Birthday My Love 🤍
@@ -161,14 +193,12 @@ Cringe laga ho toh maaf karna but these were my genuine feelings for you.
 I hope tumhara day accha jaaye and you get the all the love you deserve baby 🤍
 
 From yours only,
-Amruta (aka Rutaa)
+Amruta.
 
 Always & Forever with you.
 `;
 
-let i = 0;
-const speed = 45;
-
+/* ELEMENTS */
 const openBtn = document.getElementById("openBtn");
 const start = document.getElementById("start");
 const letterDiv = document.getElementById("letter");
@@ -177,17 +207,24 @@ const card = document.getElementById("card");
 const finalText = document.getElementById("finalText");
 const music = document.getElementById("bgMusic");
 
+let i = 0;
+const speed = 45;
+
+/* CLICK TO START */
 openBtn.addEventListener("click", () => {
   start.style.display = "none";
   letterDiv.style.display = "block";
   music.volume = 0.4;
   music.play();
+  startHearts();
   typeWriter();
 });
 
+/* TYPE + AUTO SCROLL */
 function typeWriter() {
   if (i < letter.length) {
     typedText.textContent += letter.charAt(i);
+    letterDiv.scrollTop = letterDiv.scrollHeight;
     i++;
     setTimeout(typeWriter, speed);
   } else {
@@ -195,12 +232,12 @@ function typeWriter() {
   }
 }
 
+/* END SCENE */
 function endScene() {
   card.classList.add("fadeOut");
   setTimeout(() => {
     card.style.display = "none";
-    finalText.style.display = "block";
-
+    finalText.style.display = "flex";
     setTimeout(() => {
       finalText.classList.add("fadeOut");
       fadeMusic();
@@ -208,6 +245,7 @@ function endScene() {
   }, 2000);
 }
 
+/* MUSIC FADE */
 function fadeMusic() {
   let vol = music.volume;
   const fade = setInterval(() => {
@@ -219,6 +257,20 @@ function fadeMusic() {
       clearInterval(fade);
     }
   }, 100);
+}
+
+/* HEARTS */
+function startHearts() {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💗";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (6 + Math.random() * 6) + "s";
+    heart.style.fontSize = (16 + Math.random() * 18) + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 12000);
+  }, 500);
 }
 </script>
 
