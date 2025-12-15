@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To My Love 💗</title>
+  <style>
+    body {
+      background: linear-gradient(#ffe6f0, #fff);
+      font-family: Georgia, serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      max-width: 700px;
+      border-radius: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      color: #ff4d88;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #333;
+    }
+
+    button {
+      background-color: #ff85a2;
+      border: none;
+      padding: 14px 26px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      color: white;
+      margin-top: 20px;
+    }
+
+    #letter {
+      display: none;
+      text-align: left;
+    }
+
+    #lines p {
+      margin: 12px 0;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      color: #ff4d88;
+      font-size: 22px;
+      animation: float 5s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    /* ILY animation */
+    #ily {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #ff4d88;
+      animation: pop 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pop {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <!-- START SCREEN -->
+    <div id="start">
+      <h1>To my love 💗</h1>
+      <p>I made this just for you.</p>
+      <button onclick="startLetter()">Click to open 🤍</button>
+    </div>
+
+    <!-- LETTER -->
+    <div id="letter">
+      <h1>To my love,</h1>
+      <div id="lines"></div>
+      <button onclick="nextLine()">Read next 🤍</button>
+
+      <div id="ily">I ❤️ YOU ARMAAN</div>
+      <button onclick="replay()" style="display:none" id="replayBtn">Replay 🤍</button>
+    </div>
+  </div>
+
+  <script>
+    // 💌 LETTER CONTENT (edit freely)
+    const letterLines = [
+      "Dear Armaan,",
+      "Happy Birthday 🤍",
+      "",
+      "Kaash aaj main tumhare saath hoti,",
+      "tumhare cake se secretly ek bite chura leti",
+      "aur jaan-bujh ke tumhe thoda sa irritate karti.",
+      "But distance beech mein aa gaya,",
+      "toh maine ye bana liya — sirf tumhare liye.",
+      "",
+      "Tum mere liye words se kaafi zyada ho.",
+      "Jab din heavy hote hain, tum meri shanti ho.",
+      "Jab sab loud lagta hai, tum meri comfort ho.",
+      "",
+      "Mujhe tumhara care karna,",
+      "sunna, aur bina bole samajh jaana",
+      "bohot pasand hai.",
+      "",
+      "I hope hum jaldi milenge,",
+      "aur bohot saari dates pe jaayenge —",
+      "haste hue, baatein karte hue,",
+      "aur aisi memories banaayenge",
+      "jo hum saalon baad bhi yaad karenge.",
+      "",
+      "I hope humara pyaar kabhi purana na lage.",
+      "I hope hum hamesha ek-dusre ko choose karein.",
+      "",
+      "And maybe one day,",
+      "I really want to marry you,",
+      "tumhare saath ek life build karna,",
+      "aur ek chhoti si family banana —",
+      "full of love, warmth, and us.",
+      "",
+      "Miles door hoke bhi,",
+      "tum mera favourite place ho.",
+      "",
+      "Happy Birthday, my love.",
+      "Always."
+    ];
+
+    let currentLine = 0;
+
+    function startLetter() {
+      document.getElementById("start").style.display = "none";
+      document.getElementById("letter").style.display = "block";
+      startHearts();
+    }
+
+    function nextLine() {
+      if (currentLine < letterLines.length) {
+        const p = document.createElement("p");
+        p.textContent = letterLines[currentLine];
+        document.getElementById("lines").appendChild(p);
+        currentLine++;
+      } else {
+        showILY();
+      }
+    }
+
+    function showILY() {
+      document.getElementById("ily").style.display = "block";
+      document.getElementById("replayBtn").style.display = "inline-block";
+    }
+
+    function replay() {
+      document.getElementById("lines").innerHTML = "";
+      document.getElementById("ily").style.display = "none";
+      document.getElementById("replayBtn").style.display = "none";
+      currentLine = 0;
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "💗";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (18 + Math.random() * 18) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }, 400);
+    }
+  </script>
+</body>
+</html>
